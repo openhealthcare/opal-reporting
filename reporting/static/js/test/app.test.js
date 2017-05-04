@@ -3,7 +3,7 @@ describe('app', function() {
   var scope, Episode, $controller, controller;
 
   beforeEach(function(){
-    module('opal.reports');
+    module('opal.reporting');
   });
 
   describe('always true', function(){

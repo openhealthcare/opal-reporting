@@ -12,5 +12,5 @@ and delvelopers should anticipate backwards-incompatible API changes as part of 
 (x.VERSION.x) releases.
 
 [![Build
-Status](https://travis-ci.org/openhealthcare/opal-reports.png?branch=v0.1)](https://travis-ci.org/openhealthcare/opal-reporting)
-[![Coverage Status](https://coveralls.io/repos/github/openhealthcare/opal-reports/badge.svg?branch=v0.1)](https://coveralls.io/github/openhealthcare/opal-reporting)
+Status](https://travis-ci.org/openhealthcare/opal-reporting.png?branch=v0.1)](https://travis-ci.org/openhealthcare/opal-reporting)
+[![Coverage Status](https://coveralls.io/repos/github/openhealthcare/opal-reporting/badge.svg?branch=v0.1)](https://coveralls.io/github/openhealthcare/opal-reporting)

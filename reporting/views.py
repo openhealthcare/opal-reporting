@@ -11,11 +11,11 @@ class ReportIndexView(LoginRequiredMixin, TemplateView):
     Main entrypoint into the reports service.
 
     """
-    template_name = 'report/index.html'
+    template_name = 'reporting/index.html'
 
 
 class ReportListView(ListView, LoginRequiredMixin):
-    template_name = "report/report_list.html"
+    template_name = "reporting/report_list.html"
 
     def get_queryset(self, *args, **kwargs):
         return [i for i in Report.list()]

@@ -13,7 +13,7 @@ class ReportingPlugin(plugins.OpalPlugin):
     javascripts = {
         # Add your javascripts here!
         'opal.reporting': [
-            # 'js/reporting/app.js',
+            'js/reporting/app.js',
             # 'js/reporting/controllers/larry.js',
             # 'js/reporting/services/larry.js',
         ]
