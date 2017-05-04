@@ -22,5 +22,14 @@ app.config(function($routeProvider){
         controller: 'ReportListCtrl',
         resolve: {},
         templateUrl: '/reporting/list'
+    })
+    .when('/:report', {
+        controller: 'ReportDetailCtrl',
+        resolve: {
+            report: function($route, reportLoader){
+              return reportLoader.load($route.current.params.report);
+            }
+        },
+        templateUrl: 'templates/reporting/reporting_detail.html'
     });
 });
