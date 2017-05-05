@@ -17,4 +17,8 @@ urlpatterns = patterns(
         api.ReportApi.as_view({'get': 'retrieve'}),
         name="report_api"
     ),
+    url(
+        r'^reporting/(?P<slug>[0-9a-z_-]+)/download$',
+        views.ReportDownLoadView.as_view(), name="report_download"
+    )
 )
