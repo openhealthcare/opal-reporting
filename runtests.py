@@ -14,6 +14,7 @@ settings.configure(DEBUG=True,
                    ROOT_URLCONF='opal.urls',
                    STATIC_URL='/assets/',
                    COMPRESS_ROOT='/tmp/',
+                   OPAL_BRAND_NAME="reporting",
                    MIDDLEWARE_CLASSES = (
                        'django.middleware.common.CommonMiddleware',
                        'django.contrib.sessions.middleware.SessionMiddleware',
@@ -32,7 +33,9 @@ settings.configure(DEBUG=True,
                                    'django.contrib.admin',
                                    'compressor',
                                    'opal',
-                                   'reporting',))
+                                   'reporting',
+                                   'reporting.tests',
+                                   ))
 
 import django
 django.setup()

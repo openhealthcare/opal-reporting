@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 
 from opal.core.test import OpalTestCase
 from reporting import Report
+from reporting.tests.reports import SomeReport
 
 
 class ApiTestCase(OpalTestCase):
@@ -15,13 +16,6 @@ class ApiTestCase(OpalTestCase):
                 username=self.user.username, password=self.PASSWORD
             )
         )
-
-        class SomeReport(Report):
-            slug = "some-report"
-            display_name = "Some Report"
-
-            def to_dict(self):
-                return {}
 
         self.report = SomeReport
 

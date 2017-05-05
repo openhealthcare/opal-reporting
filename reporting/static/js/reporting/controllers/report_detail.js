@@ -1,5 +1,5 @@
 angular.module('opal.reporting').controller(
-    'ReportDetailCtrl', function($rootScope, $scope, report){
+    'ReportDetailCtrl', function($scope, report){
       $scope.report = report;
     }
 );
