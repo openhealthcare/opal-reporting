@@ -17,6 +17,10 @@ ReportFile = collections.namedtuple('ReportFile', 'file_name file_data')
 class Report(discoverable.DiscoverableFeature):
     module_name = "reports"
 
+    # the template that will be used for the detail view, rendered with the report in the
+    # the template as 'object'
+    template = None
+
     # The description displayed in the list view
     description = None
     file_name = ""
@@ -63,4 +67,5 @@ class Report(discoverable.DiscoverableFeature):
                 z.write(full_file_name, zip_relative_file_path(
                     report_data.file_name)
                 )
+
         return target

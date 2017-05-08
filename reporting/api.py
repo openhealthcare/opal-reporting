@@ -9,6 +9,3 @@ class ReportApi(LoginRequiredViewset):
         report = report_cls()
         serialised = _build_json_response(report.to_dict())
         return serialised
-
-    def download(self, *args, **kwargs):
-        pass

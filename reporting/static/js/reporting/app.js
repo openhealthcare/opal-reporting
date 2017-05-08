@@ -17,8 +17,7 @@ var app = OPAL.module('opal.reporting', [
 OPAL.run(app);
 
 app.config(function($routeProvider){
-  $routeProvider.when('/', {redirectTo: '/list'})
-    .when('/list', {
+  $routeProvider.when('/list', {
         controller: 'ReportListCtrl',
         resolve: {},
         templateUrl: '/reporting/list'
@@ -30,6 +29,8 @@ app.config(function($routeProvider){
               return reportLoader.load($route.current.params.report);
             }
         },
-        templateUrl: 'templates/reporting/reporting_detail.html'
+        templateUrl: function(params){
+          return "/reporting/detail/" + params.report;
+        }
     });
 });

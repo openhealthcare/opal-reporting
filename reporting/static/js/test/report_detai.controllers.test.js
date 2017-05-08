@@ -1,6 +1,6 @@
 describe('ReportDetailCtrl', function(){
   "use strict";
-  var $scope, ctrl, $rootScope, $controller;
+  var $scope, ctrl, $rootScope, $controller, $httpBackend;
 
   beforeEach(function(){
     module('opal.reporting');
@@ -8,6 +8,7 @@ describe('ReportDetailCtrl', function(){
       $rootScope = $injector.get('$rootScope');
       $scope = $rootScope.$new();
       $controller  = $injector.get('$controller');
+      $httpBackend  = $injector.get('$httpBackend');
     });
 
     ctrl = $controller('ReportDetailCtrl', {

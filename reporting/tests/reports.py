@@ -5,6 +5,7 @@ from reporting.reports import ReportFile
 class SomeReport(Report):
     slug = "some-report"
     display_name = "Some Report"
+    template = "/some"
 
     def generate_report_data(self, *args, **kwargs):
         return [

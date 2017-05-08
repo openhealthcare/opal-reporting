@@ -1,0 +1,46 @@
+<div class="container content-offset">
+  <div class="panel panel-primary">
+    <!-- Default panel contents -->
+    <div class="panel-heading">
+      <h2>
+        <i class="fa fa-tasks"></i>
+        Reports - [[ report.display_name ]]
+      </h2>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-12">
+          [[ report.description ]]
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 text-center">
+          {% if EXTRACT_ASYNC %}
+            {# click to start the async process #}
+            <span ng-show="!report.asyncWaiting && !report.asyncReady">
+              <button ng-click="report.downloadAsynchronously()" class="btn btn-lg">Download this data</button>
+            </span>
+
+            {# while we're waiting #}
+            <span ng-show="report.asyncWaiting && !report.asyncReady">
+              <button disabled class="btn btn-lg">
+                <i class="fa fa-cog fa-spin" ></i>
+                Building your extract... this could take some time...
+              </button>
+            </span>
+
+            {# while we are go people #}
+            <span ng-show="!report.asyncWaiting && report.asyncReady">
+              <button ng-click="report.download()" class="btn btn-lg">
+                <i class="glyphicon glyphicon-download"></i>
+                Ready - Download your extract
+              </button>
+            </span>
+          {% else %}
+            <button ng-click="report.download()" class="btn btn-lg">Download this data</button>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
