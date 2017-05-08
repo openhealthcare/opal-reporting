@@ -22,7 +22,7 @@ urlpatterns = patterns(
         name="report_api"
     ),
     url(
-        r'^reporting/result/status/(?P<task_id>[a-zA-Z0-9-]*)',
+        r'^reporting/result/statut/(?P<task_id>[a-zA-Z0-9-]*)',
         views.ReportAsyncStatusView.as_view(), name='report_status'
     ),
     url(

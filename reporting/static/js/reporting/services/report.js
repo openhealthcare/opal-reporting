@@ -4,21 +4,19 @@ angular.module('opal.reporting').factory('Report', function($window, $interval, 
     _.extend(this, reportDefinition);
     this.asyncWaiting = false;
     this.asyncReady = false;
+    this.criteria = {something: "interesting"};
   };
 
   Report.prototype = {
     download: function(){
-      if(this.asyncReady){
-        $window.open(this.reportFileUrl, '_blank');
-      }
-      else{
-        $window.open(this.download_link, '_blank');
-      }
+      $window.open(this.reportFileUrl, '_blank');
     },
     downloadAsynchronously: function(){
       var self = this;
       this.asyncWaiting = true;
-      $http.get(this.download_link).then(function(result){
+      $http.post(
+        this.download_link, {criteria: JSON.stringify(this.criteria)}
+      ).then(function(result){
         self.reportStatusUrl = result.data.report_status_url;
         self.reportFileUrl = result.data.report_file_url;
         self.interval = $interval(_.bind(self.getAsyncStatus, self), 2000);

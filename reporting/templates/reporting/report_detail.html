@@ -37,7 +37,11 @@
               </button>
             </span>
           {% else %}
-            <button ng-click="report.download()" class="btn btn-lg">Download this data</button>
+          <form action="[[ report.download_link ]]" method="post" target="_blank">
+            {% csrf_token %}
+            <input name="criteria" type="hidden" value="[[ JSON.stringify(report.criteria) ]]">
+            <button type="submit" class="btn btn-lg">Download this data</button>
+          </form>
           {% endif %}
         </div>
       </div>

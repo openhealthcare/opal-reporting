@@ -2,6 +2,7 @@
 Views for the reports OPAL Plugin
 """
 import datetime
+import json
 from celery.result import AsyncResult
 from opal.core import celery
 from django.views.generic import ListView, TemplateView, View, DetailView
@@ -10,7 +11,7 @@ from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 
 from opal.core.views import LoginRequiredMixin
-from opal.core.views import json_response
+from opal.core.views import json_response, _get_request_data
 from opal.core.search.views import ajax_login_required_view
 from reporting import Report
 
@@ -94,11 +95,13 @@ class ReportFileView(View):
 
 class ReportDownLoadView(View):
     @ajax_login_required_view
-    def get(self, *args, **kwargs):
+    def post(self, *args, **kwargs):
         if getattr(settings, 'EXTRACT_ASYNC', None):
+            criteria = _get_request_data(self.request)['criteria']
             extract_id = async_extract(
                 kwargs["slug"],
-                self.request.user,
+                user=self.request.user,
+                criteria=criteria
             )
             return json_response({
                 'report_status_url': reverse(
@@ -109,8 +112,12 @@ class ReportDownLoadView(View):
                 ),
             })
 
+        criteria = json.loads(self.request.POST['criteria'])
         report_cls = Report.get(kwargs["slug"])
-        fname = report_cls().zip_archive_report_data(self.request.user)
+        fname = report_cls().zip_archive_report_data(
+            user=self.request.user,
+            criteria=criteria
+        )
         resp = HttpResponse(open(fname, 'rb').read())
         disp = 'attachment; filename="{0}extract{1}.zip"'.format(
             settings.OPAL_BRAND_NAME, datetime.datetime.now().isoformat())

@@ -6,7 +6,7 @@ from django.test import override_settings
 
 from opal.core.test import OpalTestCase
 from reporting.tests.reports import SomeReport
-from reporting import Report
+from reporting import Report, ReportFile
 
 
 class ViewsTestCase(OpalTestCase):
@@ -52,7 +52,6 @@ class TestDetailView(ViewsTestCase):
         )
 
 
-
 class TestIndexView(ViewsTestCase):
     def test_get(self):
         response = self.client.get(reverse("report_index"))
@@ -65,7 +64,29 @@ class TestReportDownLoadView(ViewsTestCase):
         url = reverse("report_download", kwargs={
             "slug": self.report.get_slug()
         })
-        response = self.client.get(url)
+        response = self.client.post(url, dict(criteria=json.dumps("{}")))
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response["content-disposition"].startswith(
+            'attachment; filename="reportingextract'
+        ))
+
+    @override_settings(EXTRACT_ASYNC=False)
+    def test_get_sync_params(self):
+        url = reverse("report_download", kwargs={
+            "slug": self.report.get_slug()
+        })
+        with patch.object(self.report, "generate_report_data") as gen_report:
+            gen_report.return_value = [
+                ReportFile(
+                    file_name="some_file.txt", file_data=[['hello']]
+                )
+            ]
+
+            response = self.client.post(url, dict(criteria="{}"))
+        call_args = gen_report.call_args
+        self.assertEqual(call_args[1]["user"].username, "testuser")
+        self.assertEqual(call_args[1]["criteria"], {})
+
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response["content-disposition"].startswith(
             'attachment; filename="reportingextract'
@@ -77,11 +98,16 @@ class TestReportDownLoadView(ViewsTestCase):
         url = reverse("report_download", kwargs={
             "slug": self.report.get_slug()
         })
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
-        async_extract.assert_called_once_with(
-            self.report.get_slug(), self.user
+        response = self.client.post(
+            url,
+            data=json.dumps(dict(criteria={})),
+            content_type='application/json'
         )
+        self.assertEqual(response.status_code, 200)
+        call_args = async_extract.call_args
+        self.assertEqual(call_args[0][0], self.report.get_slug())
+        self.assertEqual(call_args[1]["user"].username, "testuser")
+        self.assertEqual(call_args[1]["criteria"], {})
 
 
 class TestReportAsyncStatusView(ViewsTestCase):

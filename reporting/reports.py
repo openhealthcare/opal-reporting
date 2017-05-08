@@ -34,7 +34,7 @@ class Report(discoverable.DiscoverableFeature):
             download_link=reverse("report_download", kwargs=dict(slug=slug))
         )
 
-    def generate_report_data(self, user, arguments=None):
+    def generate_report_data(self, user=None, criteria=None):
         # returns a list of ReportFiles, this should be overrode
         raise NotImplementedError(
             "Please implement a way of generating report data"
@@ -46,7 +46,7 @@ class Report(discoverable.DiscoverableFeature):
             for data in report_data.file_data:
                 writer.writerow(data)
 
-    def zip_archive_report_data(self, user, arguments=None):
+    def zip_archive_report_data(self, user=None, criteria=None):
         target_dir = tempfile.mkdtemp()
         target = os.path.join(target_dir, 'extract.zip')
 
@@ -59,7 +59,9 @@ class Report(discoverable.DiscoverableFeature):
                 os.path.join, target_dir, zipfolder
             )
             zip_relative_file_path = functools.partial(os.path.join, zipfolder)
-            report_data_sequences = self.generate_report_data(user, arguments)
+            report_data_sequences = self.generate_report_data(
+                user=user, criteria=criteria
+            )
 
             for report_data in report_data_sequences:
                 full_file_name = make_file_path(report_data.file_name)
