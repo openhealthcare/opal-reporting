@@ -75,17 +75,19 @@ class TestReportDownLoadView(ViewsTestCase):
         url = reverse("report_download", kwargs={
             "slug": self.report.get_slug()
         })
+        criteria = dict(something="other")
         with patch.object(self.report, "generate_report_data") as gen_report:
             gen_report.return_value = [
                 ReportFile(
                     file_name="some_file.txt", file_data=[['hello']]
                 )
             ]
-
-            response = self.client.post(url, dict(criteria="{}"))
+            response = self.client.post(url, dict(criteria=json.dumps(
+                criteria
+            )))
         call_args = gen_report.call_args
         self.assertEqual(call_args[1]["user"].username, "testuser")
-        self.assertEqual(call_args[1]["criteria"], {})
+        self.assertEqual(call_args[1]["criteria"], criteria)
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response["content-disposition"].startswith(
