@@ -1,9 +1,10 @@
 angular.module('opal.reporting')
   .factory('reportLoader', function($q, $route, $http, $window, Report){
+    "use strict";
     return {
       load: function(reportSlug){
   	    var deferred = $q.defer();
-        url = '/reporting/api/' + reportSlug;
+        url = '/api/v0.1/reporting/' + reportSlug + "/";
 
         $http({ cache: true, url: url, method: 'GET'}).then(
           function(resource) {

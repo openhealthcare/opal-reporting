@@ -92,36 +92,6 @@ class TestReportDownLoadView(ViewsTestCase):
             'attachment; filename="reportingextract'
         ))
 
-    @override_settings(EXTRACT_ASYNC=True)
-    @patch('reporting.views.async_extract')
-    def test_get_async(self, async_extract):
-        url = reverse("report_download", kwargs={
-            "slug": self.report.get_slug()
-        })
-        response = self.client.post(
-            url,
-            data=json.dumps(dict(criteria={})),
-            content_type='application/json'
-        )
-        self.assertEqual(response.status_code, 200)
-        call_args = async_extract.call_args
-        self.assertEqual(call_args[0][0], self.report.get_slug())
-        self.assertEqual(call_args[1]["user"].username, "testuser")
-        self.assertEqual(call_args[1]["criteria"], {})
-
-
-class TestReportAsyncStatusView(ViewsTestCase):
-    @patch('reporting.views.AsyncResult')
-    def test_get(self, AsyncResult):
-        AsyncResult().ready.return_value = True
-        url = reverse("report_status", kwargs={
-            "task_id": "100"
-        })
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(json.loads(response.content)["ready"], True)
-        self.assertEqual(AsyncResult.call_args[1]['id'], '100')
-
 
 @patch('reporting.views.AsyncResult')
 class TestReportFileView(ViewsTestCase):

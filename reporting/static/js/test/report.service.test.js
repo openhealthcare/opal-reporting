@@ -28,17 +28,17 @@ var Report, $window, $httpBackend, $interval, $rootScope;
   });
 
   it('show open a window on download', function(){
-      var report = new Report({download_link: "some_link"});
-      report.download();
+      var report = new Report({reportFileUrl: "some_link"});
+      report.downloadAsynchronously();
       expect($window.open).toHaveBeenCalledWith("some_link", '_blank');
   });
 
   it('should trigger $interval on dowload asynchronously', function(){
-    var report = new Report({download_link: "/some_link"});
-    $httpBackend.expectGET('/some_link').respond({
+    var report = new Report({create_async_link: "/some_link"});
+    $httpBackend.expectPOST('/some_link').respond({
       report_status_url: "/reportStats", report_file_url: "/reportFile"
     });
-    report.downloadAsynchronously();
+    report.startAsynchronousTask();
     $httpBackend.flush();
     $rootScope.$apply();
     expect(report.asyncWaiting).toBe(true);

@@ -8,22 +8,13 @@ from opal.core import celery
 from django.views.generic import ListView, TemplateView, View, DetailView
 from django.conf import settings
 from django.http import HttpResponse
-from django.core.urlresolvers import reverse
 
 from opal.core.views import LoginRequiredMixin
-from opal.core.views import json_response, _get_request_data
+from opal.core.views import json_response
 from opal.core.search.views import ajax_login_required_view
 from reporting import Report
 
 from rest_framework import status
-
-
-def async_extract(report_slug, user):
-    """
-    Given the user and the criteria, let's run an async extract.
-    """
-    from reporting import tasks
-    return tasks.extract.delay(report_slug, user).id
 
 
 class ReportIndexView(LoginRequiredMixin, TemplateView):
@@ -54,20 +45,6 @@ class ReportDetailView(DetailView, LoginRequiredMixin):
         return template_names
 
 
-class ReportAsyncStatusView(View):
-    @ajax_login_required_view
-    def get(self, *args, **kwargs):
-        """
-        Tell the client about the state of the extract
-        """
-
-        task_id = kwargs['task_id']
-        result = AsyncResult(id=task_id, app=celery.app)
-        return json_response({
-            'ready': result.ready()
-        })
-
-
 class ReportFileView(View):
 
     @ajax_login_required_view
@@ -96,22 +73,6 @@ class ReportFileView(View):
 class ReportDownLoadView(View):
     @ajax_login_required_view
     def post(self, *args, **kwargs):
-        if getattr(settings, 'EXTRACT_ASYNC', None):
-            criteria = _get_request_data(self.request)['criteria']
-            extract_id = async_extract(
-                kwargs["slug"],
-                user=self.request.user,
-                criteria=criteria
-            )
-            return json_response({
-                'report_status_url': reverse(
-                    "report_status", kwargs=dict(task_id=extract_id)
-                ),
-                'report_file_url': reverse(
-                    "report_file", kwargs=dict(task_id=extract_id)
-                ),
-            })
-
         criteria = json.loads(self.request.POST['criteria'])
         report_cls = Report.get(kwargs["slug"])
         fname = report_cls().zip_archive_report_data(

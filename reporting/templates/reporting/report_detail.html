@@ -18,7 +18,7 @@
           {% if EXTRACT_ASYNC %}
             {# click to start the async process #}
             <span ng-show="!report.asyncWaiting && !report.asyncReady">
-              <button ng-click="report.downloadAsynchronously()" class="btn btn-lg">Download this data</button>
+              <button ng-click="report.startAsynchronousTask()" class="btn btn-lg">Download this data</button>
             </span>
 
             {# while we're waiting #}
@@ -31,7 +31,7 @@
 
             {# while we are go people #}
             <span ng-show="!report.asyncWaiting && report.asyncReady">
-              <button ng-click="report.download()" class="btn btn-lg">
+              <button ng-click="report.downloadAsynchronously()" class="btn btn-lg">
                 <i class="glyphicon glyphicon-download"></i>
                 Ready - Download your extract
               </button>

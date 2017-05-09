@@ -3,6 +3,7 @@ Plugin definition for the reporting OPAL plugin
 """
 from opal.core import plugins
 
+from reporting import api
 from reporting.urls import urlpatterns
 
 
@@ -21,6 +22,11 @@ class ReportingPlugin(plugins.OpalPlugin):
             'js/reporting/services/report.js',
         ]
     }
+
+    apis = (
+        ("reporting", api.ReportApi,),
+        ("reporting-task", api.ReportTaskApi,),
+    )
 
     def list_schemas(self):
         """
