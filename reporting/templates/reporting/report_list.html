@@ -18,10 +18,18 @@
             </div>
             <div class="panel-body">
               <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-12">
                   <p>
                     {{ object.description }}
                   </p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <a href="#/{{ object.get_slug }}" class="btn btn-primary btn-lg">
+                    <i class="fa fa-arrow-right"></i>
+                    Go
+                  </a>
                 </div>
               </div>
             </div>

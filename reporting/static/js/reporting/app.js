@@ -1,5 +1,5 @@
 //
-// Main OPAL Reports plugin application!
+// Main OPAL Reporting plugin application!
 //
 var opalshim = OPAL.module('opal', [])
 
@@ -21,6 +21,15 @@ app.config(function($routeProvider){
     .when('/list', {
         controller: 'ReportListCtrl',
         resolve: {},
-        templateUrl: '/reports/list'
+        templateUrl: '/reporting/list'
+    })
+    .when('/:report', {
+        controller: 'ReportDetailCtrl',
+        resolve: {
+            report: function($route, reportLoader){
+              return reportLoader.load($route.current.params.report);
+            }
+        },
+        templateUrl: 'templates/reporting/reporting_detail.html'
     });
 });

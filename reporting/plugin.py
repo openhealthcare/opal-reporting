@@ -5,6 +5,7 @@ from opal.core import plugins
 
 from reporting.urls import urlpatterns
 
+
 class ReportingPlugin(plugins.OpalPlugin):
     """
     Main entrypoint to expose this plugin to our OPAL application.
@@ -13,9 +14,11 @@ class ReportingPlugin(plugins.OpalPlugin):
     javascripts = {
         # Add your javascripts here!
         'opal.reporting': [
-            # 'js/reporting/app.js',
-            # 'js/reporting/controllers/larry.js',
-            # 'js/reporting/services/larry.js',
+            'js/reporting/app.js',
+            'js/reporting/controllers/report_detail.js',
+            'js/reporting/controllers/report_list.js',
+            'js/reporting/services/report_loader.js',
+            'js/reporting/services/report.js',
         ]
     }
 
