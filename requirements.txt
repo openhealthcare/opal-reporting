@@ -2,3 +2,4 @@ python-dateutil==2.4.2
 mock==1.0.1
 django-compressor==1.5
 -e git+https://github.com/openhealthcare/opal.git@ff905aa57145a87ea2acf288518516328afafa9d#egg=opal-origin/v0.8.2
+-e git://github.com/openhealthcare/opal.git@v0.8.0#egg=opal
