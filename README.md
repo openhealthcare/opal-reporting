@@ -34,7 +34,7 @@ Create a report object in your {{ application }}/reports.py. This should look so
 class YourFirstReport(Report):
     slug = "your-first-report"
     display_name = "Your First Report"
-    description = """Everyone has to have one report that is their first, this ones yours"""
+    description = """Everyone has to have one report that is their first, this one is yours."""
 
     def generate_report_data(self, *args, **kwargs):
         return [
