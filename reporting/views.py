@@ -1,5 +1,5 @@
 """
-Views for the reports OPAL Plugin
+Views for the reports Opal Plugin
 """
 import datetime
 import json
