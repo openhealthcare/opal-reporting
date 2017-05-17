@@ -10,9 +10,11 @@
     <div class="panel-body">
       <div class="row">
         <div class="col-md-12">
-          {% block report_description %}
-          [[ report.description ]]
-          {% endblock report_description %}
+          <p class="lead">
+            {% block report_description %}
+            [[ report.description ]]
+            {% endblock report_description %}
+          </p>
         </div>
       </div>
       {% block report_choices %}
