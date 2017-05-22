@@ -3,7 +3,9 @@ Plugin definition for the reporting OPAL plugin
 """
 from opal.core import plugins
 
+from reporting import api
 from reporting.urls import urlpatterns
+
 
 class ReportingPlugin(plugins.OpalPlugin):
     """
@@ -14,10 +16,17 @@ class ReportingPlugin(plugins.OpalPlugin):
         # Add your javascripts here!
         'opal.reporting': [
             'js/reporting/app.js',
-            # 'js/reporting/controllers/larry.js',
-            # 'js/reporting/services/larry.js',
+            'js/reporting/controllers/report_detail.js',
+            'js/reporting/controllers/report_list.js',
+            'js/reporting/services/report_loader.js',
+            'js/reporting/services/report.js',
         ]
     }
+
+    apis = (
+        ("reporting", api.ReportApi,),
+        ("reporting-task", api.ReportTaskApi,),
+    )
 
     def list_schemas(self):
         """

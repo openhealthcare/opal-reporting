@@ -17,10 +17,20 @@ var app = OPAL.module('opal.reporting', [
 OPAL.run(app);
 
 app.config(function($routeProvider){
-  $routeProvider.when('/', {redirectTo: '/list'})
-    .when('/list', {
+  $routeProvider.when('/list', {
         controller: 'ReportListCtrl',
         resolve: {},
         templateUrl: '/reporting/list'
+    })
+    .when('/:report', {
+        controller: 'ReportDetailCtrl',
+        resolve: {
+            report: function($route, reportLoader){
+              return reportLoader.load($route.current.params.report);
+            }
+        },
+        templateUrl: function(params){
+          return "/reporting/detail/" + params.report;
+        }
     });
 });
