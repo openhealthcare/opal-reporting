@@ -25,7 +25,10 @@
             {% if EXTRACT_ASYNC %}
               {# click to start the async process #}
               <span ng-show="!report.asyncWaiting && !report.asyncReady">
-                <button ng-click="report.startAsynchronousTask()" class="btn btn-lg">Download this data</button>
+                <button ng-click="report.startAsynchronousTask()" class="btn btn-lg">
+                  <i class="fa fa-cogs"></i>
+                  Download this data
+                </button>
               </span>
 
               {# while we're waiting #}
@@ -47,7 +50,10 @@
             <form action="[[ report.download_link ]]" method="post" target="_blank">
               {% csrf_token %}
               <input name="criteria" type="hidden" value="[[ JSON.stringify(report.criteria) ]]">
-              <button type="submit" class="btn btn-lg">Download this data</button>
+              <button type="submit" class="btn btn-lg">
+                <i class="glyphicon glyphicon-download"></i>
+                Download this data
+              </button>
             </form>
             {% endif %}
           {% endblock %}
