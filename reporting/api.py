@@ -1,11 +1,10 @@
-from opal.core.views import _build_json_response
 from reporting import Report
 from opal.core.api import LoginRequiredViewset
-from opal.core.views import json_response
 from celery.result import AsyncResult
 from opal.core import celery
 from opal.core.views import json_response, _get_request_data
 from django.core.urlresolvers import reverse
+import json
 
 
 def async_extract(report_slug, user=None, criteria=None):
@@ -23,7 +22,7 @@ class ReportApi(LoginRequiredViewset):
     def retrieve(self, *args, **kwargs):
         report_cls = Report.get(kwargs["slug"])
         report = report_cls()
-        serialised = _build_json_response(report.to_dict())
+        serialised = json_response(report.to_dict())
         return serialised
 
 
@@ -39,7 +38,7 @@ class ReportTaskApi(LoginRequiredViewset):
         })
 
     def create(self, *args, **kwargs):
-        criteria = _get_request_data(self.request)['criteria']
+        criteria = json.loads(_get_request_data(self.request)['criteria'])
         extract_id = async_extract(
             self.request.query_params["slug"],
             user=self.request.user,
