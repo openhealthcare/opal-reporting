@@ -1,13 +1,13 @@
 angular.module('opal.reporting').factory('Report', function($window, $interval, $http){
   "use strict";
   var Report = function(reportDefinition){
-    this.refresh();
+    this.reset();
     _.extend(this, reportDefinition);
     this.criteria = {};
   };
 
   Report.prototype = {
-    refresh: function(){
+    reset: function(){
       this.asyncWaiting = false;
       this.asyncReady = false;
       this.reportStatusUrl = null;
