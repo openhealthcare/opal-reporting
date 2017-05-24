@@ -40,6 +40,11 @@ class ReportTaskApi(LoginRequiredViewset):
 
     def create(self, *args, **kwargs):
         criteria = _get_request_data(self.request)['criteria']
+        import logging
+        logging.error("====")
+        logging.error(criteria)
+        logging.error(criteria.__class__)
+        logging.error("====")
         extract_id = async_extract(
             self.request.query_params["slug"],
             user=self.request.user,
