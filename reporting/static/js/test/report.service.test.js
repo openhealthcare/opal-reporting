@@ -27,13 +27,13 @@ var Report, $window, $httpBackend, $interval, $rootScope;
     expect(report.asyncWaiting).toBe(false);
   });
 
-  it('should refresh the report', function(){
+  it('should reset the report', function(){
     var report = new Report({download_link: "some_link"});
     report.asyncReady = true;
     report.asyncWaiting = true;
     report.reportStatusUrl = "blah";
     report.reportFileUrl = "otherBlah";
-    report.refresh();
+    report.reset();
     expect(report.asyncReady).toBe(false);
     expect(report.asyncWaiting).toBe(false);
     expect(report.reportStatusUrl).toBe(null);
