@@ -1,5 +1,5 @@
 describe('Report', function(){
-  "use strict";
+"use strict";
 var Report, $window, $httpBackend, $interval, $rootScope;
 
 
@@ -25,6 +25,19 @@ var Report, $window, $httpBackend, $interval, $rootScope;
     expect(report.download_link).toBe("some_link");
     expect(report.asyncReady).toBe(false);
     expect(report.asyncWaiting).toBe(false);
+  });
+
+  it('should reset the report', function(){
+    var report = new Report({download_link: "some_link"});
+    report.asyncReady = true;
+    report.asyncWaiting = true;
+    report.reportStatusUrl = "blah";
+    report.reportFileUrl = "otherBlah";
+    report.reset();
+    expect(report.asyncReady).toBe(false);
+    expect(report.asyncWaiting).toBe(false);
+    expect(report.reportStatusUrl).toBe(null);
+    expect(report.reportFileUrl).toBe(null);
   });
 
   it('show open a window on download', function(){

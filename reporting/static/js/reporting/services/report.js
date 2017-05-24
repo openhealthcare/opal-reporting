@@ -1,13 +1,18 @@
 angular.module('opal.reporting').factory('Report', function($window, $interval, $http){
   "use strict";
   var Report = function(reportDefinition){
+    this.reset();
     _.extend(this, reportDefinition);
-    this.asyncWaiting = false;
-    this.asyncReady = false;
     this.criteria = {};
   };
 
   Report.prototype = {
+    reset: function(){
+      this.asyncWaiting = false;
+      this.asyncReady = false;
+      this.reportStatusUrl = null;
+      this.reportFileUrl = null;
+    },
     downloadAsynchronously: function(){
         $window.open(this.reportFileUrl, '_blank');
     },
