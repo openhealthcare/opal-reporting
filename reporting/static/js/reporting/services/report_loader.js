@@ -4,7 +4,7 @@ angular.module('opal.reporting')
     return {
       load: function(reportSlug){
   	    var deferred = $q.defer();
-        url = '/api/v0.1/reporting/' + reportSlug + "/";
+        var url = '/api/v0.1/reporting/' + reportSlug + "/";
 
         $http({ cache: true, url: url, method: 'GET'}).then(
           function(resource) {

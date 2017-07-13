@@ -1,7 +1,7 @@
 """
 Plugin definition for the reporting OPAL plugin
 """
-from opal.core import plugins
+from opal.core import plugins, menus
 
 from reporting import api
 from reporting.urls import urlpatterns
@@ -27,6 +27,12 @@ class ReportingPlugin(plugins.OpalPlugin):
         ("reporting", api.ReportApi,),
         ("reporting-task", api.ReportTaskApi,),
     )
+
+    menuitems = [
+        menus.MenuItem(
+            href="/reporting/#/list", display="Reports", icon="fa fa-file-zip-o",
+            activepattern='/reporting', index=1)
+    ]
 
     def list_schemas(self):
         """
