@@ -1,11 +1,10 @@
 """
 Urls for the reporting OPAL plugin
 """
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from reporting import views
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
     url('^reporting/$', views.ReportIndexView.as_view(), name="report_index"),
     url(
         '^reporting/list$',
@@ -24,4 +23,4 @@ urlpatterns = patterns(
         r'^reporting/(?P<slug>[0-9a-z_-]+)/download$',
         views.ReportDownLoadView.as_view(), name="report_download"
     ),
-)
+]
