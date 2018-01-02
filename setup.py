@@ -8,10 +8,10 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='opal-reporting',
-    version='0.1',
+    version='0.2',
     packages=['reporting'],
     include_package_data=True,
-    license='LICENSE',  
+    license='LICENSE',
     description='The reporting OPAL Plugin',
     long_description=README,
     url='http://opal.openhealthcare.org.uk/',
