@@ -1,41 +1,65 @@
 """
 Standalone test runner for reporting plugin
 """
-import os
 import sys
 from django.conf import settings
 
-settings.configure(DEBUG=True,
-                   DATABASES={
-                       'default': {
-                           'ENGINE': 'django.db.backends.sqlite3',
-                       }
-                   },
-                   ROOT_URLCONF='opal.urls',
-                   STATIC_URL='/assets/',
-                   COMPRESS_ROOT='/tmp/',
-                   OPAL_BRAND_NAME="reporting",
-                   MIDDLEWARE_CLASSES = (
-                       'django.middleware.common.CommonMiddleware',
-                       'django.contrib.sessions.middleware.SessionMiddleware',
-                       'opal.middleware.AngularCSRFRename',
-                       'django.middleware.csrf.CsrfViewMiddleware',
-                       'django.contrib.auth.middleware.AuthenticationMiddleware',
-                       'django.contrib.messages.middleware.MessageMiddleware',
-                       'opal.middleware.DjangoReversionWorkaround',
-                       'reversion.middleware.RevisionMiddleware',
-                       'axes.middleware.FailedLoginMiddleware',
-                   ),
-                   INSTALLED_APPS=('django.contrib.auth',
-                                   'django.contrib.contenttypes',
-                                   'django.contrib.sessions',
-                                   'django.contrib.staticfiles',
-                                   'django.contrib.admin',
-                                   'compressor',
-                                   'opal',
-                                   'reporting',
-                                   'reporting.tests',
-                                   ))
+settings.configure(
+    DEBUG=True,
+    DATABASES={
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+        }
+    },
+    ROOT_URLCONF='opal.urls',
+    STATIC_URL='/assets/',
+    COMPRESS_ROOT='/tmp/',
+    OPAL_BRAND_NAME="reporting",
+    TEMPLATES=[
+        {
+            'BACKEND': 'django.template.backends.django.DjangoTemplates',
+            'DIRS': [],
+            'APP_DIRS': True,
+            'OPTIONS': {
+                'context_processors': [
+                    'django.contrib.auth.context_processors.auth',
+                    'django.template.context_processors.debug',
+                    'django.template.context_processors.i18n',
+                    'django.template.context_processors.media',
+                    'django.template.context_processors.request',
+                    'django.template.context_processors.static',
+                    'django.template.context_processors.tz',
+                    'django.contrib.messages.context_processors.messages',
+                    'opal.context_processors.settings',
+                    'opal.context_processors.models'
+                ],
+                # ... some options here ...
+            },
+        },
+    ],
+    MIDDLEWARE_CLASSES=(
+        'django.middleware.common.CommonMiddleware',
+        'django.contrib.sessions.middleware.SessionMiddleware',
+        'opal.middleware.AngularCSRFRename',
+        'django.middleware.csrf.CsrfViewMiddleware',
+        'django.contrib.auth.middleware.AuthenticationMiddleware',
+        'django.contrib.messages.middleware.MessageMiddleware',
+        'opal.middleware.DjangoReversionWorkaround',
+        'reversion.middleware.RevisionMiddleware',
+        'axes.middleware.FailedLoginMiddleware',
+    ),
+    INSTALLED_APPS=(
+        'django.contrib.auth',
+        'django.contrib.contenttypes',
+        'django.contrib.sessions',
+        'django.contrib.staticfiles',
+        'django.contrib.admin',
+        'compressor',
+        'opal',
+        'reporting',
+        'reporting.tests',
+    )
+)
 
 import django
 django.setup()
