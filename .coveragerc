@@ -1,0 +1,10 @@
+[run]
+source =
+    reporting
+omit =
+    reporting/tests/*
+    */migrations/*
+
+[report]
+exclude_lines =
+    def __unicode__

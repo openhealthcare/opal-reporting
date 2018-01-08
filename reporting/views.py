@@ -3,18 +3,18 @@ Views for the reports Opal Plugin
 """
 import datetime
 import json
+
 from celery.result import AsyncResult
-from opal.core import celery
 from django.views.generic import ListView, TemplateView, View, DetailView
 from django.conf import settings
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
-
-from opal.core.views import LoginRequiredMixin
+from opal.core import celery
 from opal.core.views import json_response
 from opal.core.search.views import ajax_login_required_view
-from reporting import Report
-
 from rest_framework import status
+
+from reporting import Report
 
 
 class ReportIndexView(LoginRequiredMixin, TemplateView):
