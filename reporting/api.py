@@ -38,7 +38,7 @@ class ReportTaskApi(LoginRequiredViewset):
         })
 
     def create(self, *args, **kwargs):
-        criteria = json.loads(_get_request_data(self.request)['criteria'])
+        criteria = json.loads(self.request.data['criteria'])
         extract_id = async_extract(
             self.request.query_params["slug"],
             user=self.request.user,
