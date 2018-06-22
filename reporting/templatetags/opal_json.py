@@ -1,6 +1,6 @@
 import json
 from django import template
-from opal.core.serialization import OpalSerializer
+from opal.core.views import OpalSerializer
 register = template.Library()
 
 
