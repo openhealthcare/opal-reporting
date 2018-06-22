@@ -11,6 +11,10 @@ settings.configure(
             'ENGINE': 'django.db.backends.sqlite3',
         }
     },
+    DATE_FORMAT= 'd/m/Y',
+    DATE_INPUT_FORMATS = ['%d/%m/%Y'],
+    DATETIME_FORMAT = 'd/m/Y H:i:s',
+    DATETIME_INPUT_FORMATS = ['%d/%m/%Y %H:%M:%S'],
     ROOT_URLCONF='opal.urls',
     STATIC_URL='/assets/',
     COMPRESS_ROOT='/tmp/',
@@ -54,6 +58,7 @@ settings.configure(
         'django.contrib.sessions',
         'django.contrib.staticfiles',
         'django.contrib.admin',
+        'axes',
         'compressor',
         'opal',
         'reporting',

@@ -3,7 +3,7 @@ describe('ReportDetailCtrl', function(){
   var $scope, ctrl, $rootScope, $controller, $httpBackend;
 
   beforeEach(function(){
-    module('opal.reporting');
+    module('opal.controllers');
     inject(function($injector){
       $rootScope = $injector.get('$rootScope');
       $scope = $rootScope.$new();
@@ -15,6 +15,11 @@ describe('ReportDetailCtrl', function(){
         $scope: $scope,
         report: "someReport"
     });
+  });
+
+  afterEach(function(){
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
   });
 
   it('show hoist the report onto scope', function(){

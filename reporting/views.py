@@ -25,14 +25,14 @@ class ReportIndexView(LoginRequiredMixin, TemplateView):
     template_name = 'reporting/index.html'
 
 
-class ReportListView(ListView, LoginRequiredMixin):
+class ReportListView(LoginRequiredMixin, ListView):
     template_name = "reporting/report_list.html"
 
     def get_queryset(self, *args, **kwargs):
         return [i for i in Report.list()]
 
 
-class ReportDetailView(DetailView, LoginRequiredMixin):
+class ReportDetailView(LoginRequiredMixin, DetailView):
     template_name = "reporting/report_detail.html"
 
     def get_object(self, *args, **kwargs):

@@ -1,4 +1,4 @@
-angular.module('opal.reporting').controller(
+angular.module('opal.controllers').controller(
     'ReportListCtrl', function($rootScope, $scope){
     }
 );

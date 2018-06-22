@@ -13,3 +13,9 @@ class SomeReport(Report):
                 file_name="some_file.txt", file_data=[['hello']]
             )
         ]
+
+    def report_options(self):
+        return [dict(
+            criteria=dict(option=1),
+            display_name="Option 1"
+        )]

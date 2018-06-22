@@ -15,7 +15,6 @@ var app = OPAL.module('opal.reporting', [
 ]);
 
 OPAL.run(app);
-
 app.config(function($routeProvider){
   $routeProvider.when('/', {redirectTo: '/list'})
     .when('/list', {

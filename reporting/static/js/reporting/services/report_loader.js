@@ -1,4 +1,4 @@
-angular.module('opal.reporting')
+angular.module('opal.services')
   .factory('reportLoader', function($q, $route, $http, $window, Report){
     "use strict";
     return {

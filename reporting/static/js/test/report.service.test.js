@@ -4,7 +4,7 @@ var Report, $window, $httpBackend, $interval, $rootScope;
 
 
   beforeEach(function(){
-    module('opal.reporting');
+    module('opal.services');
     inject(function($injector){
       Report = $injector.get('Report');
       $window = $injector.get('$window');
@@ -48,10 +48,10 @@ var Report, $window, $httpBackend, $interval, $rootScope;
 
   it('should trigger $interval on dowload asynchronously', function(){
     var report = new Report({create_async_link: "/some_link"});
-    $httpBackend.expectPOST('/some_link').respond({
+    $httpBackend.expectPOST('/some_link', {"criteria":"{\"some\":\"value\"}"}).respond({
       report_status_url: "/reportStats", report_file_url: "/reportFile"
     });
-    report.startAsynchronousTask();
+    report.startAsynchronousTask({some: "value"});
     $httpBackend.flush();
     $rootScope.$apply();
     expect(report.asyncWaiting).toBe(true);

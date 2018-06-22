@@ -4,6 +4,7 @@ import os
 import tempfile
 import zipfile
 import csv
+import json
 from django.core.urlresolvers import reverse
 
 from opal.core import discoverable
@@ -12,6 +13,26 @@ import collections
 
 
 ReportFile = collections.namedtuple('ReportFile', 'file_name file_data')
+
+
+class ReportOption(object):
+    """
+    The options as they appear in the template
+    """
+    template = "reporting/report_option.html"
+    critera = {}
+
+    def __init__(self, **kwargs):
+        if "display_name" not in kwargs:
+            if "template" not in kwargs:
+                err = "Either display name or a template is required by Report \
+Option"
+                raise ValueError(err)
+
+            if "criteria" not in kwargs:
+                raise ValueError("ReportOption requires a criteria")
+        for k, v in kwargs.items():
+            setattr(self, k, v)
 
 
 class Report(discoverable.DiscoverableFeature):
@@ -24,6 +45,13 @@ class Report(discoverable.DiscoverableFeature):
     # The description displayed in the list view
     description = None
     file_name = ""
+
+    # the text to be displayed if not reports are available
+    # the whole template can be override by no_report_templtate
+    no_report_text = "Sorry no reports are currently available"
+
+    # the template to be displayed if there are no reports
+    no_report_template = None
 
     def to_dict(self):
         slug = self.__class__.get_slug()
@@ -48,6 +76,17 @@ class Report(discoverable.DiscoverableFeature):
         raise NotImplementedError(
             "Please implement a way of generating report data"
         )
+
+    def report_options(self):
+        raise NotImplementedError(
+            "Please implement a way of generating report data"
+        )
+
+    def get_report_options(self):
+        # returns a list of ReportOptions, this should be overridden
+        report_options = self.report_options()
+        options = [ReportOption(**i) for i in report_options]
+        return options
 
     def write_csv(self, full_file_name, report_data):
         with open(full_file_name, "w") as csv_file:

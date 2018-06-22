@@ -26,22 +26,52 @@ class TestListView(ViewsTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("Some Report", response.content)
 
+    def test_login_required(self):
+        self.client.logout()
+        response = self.client.get(reverse("report_list"), follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.template_name,
+            'registration/login.html'
+        )
+
 
 class TestDetailView(ViewsTestCase):
+    def get_url(self):
+        return reverse(
+            "report_detail",
+            kwargs={
+                "slug": self.report.get_slug(),
+            }
+        )
+
     def test_get(self):
-        response = self.client.get(reverse("report_detail", kwargs={
-            "slug": self.report.get_slug()
-        }))
+        url = self.get_url()
+        response = self.client.get(url, follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             response.template_name,
             ['/some', 'reporting/report_detail.html']
         )
 
+    def test_get_login_required(self):
+        url = self.get_url()
+        self.client.logout()
+        response = self.client.get(url, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.template_name,
+            'registration/login.html'
+        )
+
     def test_get_templates_when_not_set(self):
         class SomeOtherReport(Report):
             slug = "some-other-report"
             display_name = "Some Other Report"
+
+            def report_options(self):
+                return []
+
         response = self.client.get(reverse("report_detail", kwargs={
             "slug": SomeOtherReport.get_slug()
         }))

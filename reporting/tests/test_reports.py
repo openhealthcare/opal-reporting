@@ -1,0 +1,61 @@
+from opal.core.test import OpalTestCase
+from reporting.tests.reports import SomeReport
+from reporting import reports
+
+
+class ReportOptionTestCase(OpalTestCase):
+    def test_init_no_display_name_no_template(self):
+        with self.assertRaises(ValueError) as ve:
+            reports.ReportOption(criteria=dict(something="somethign"))
+
+        self.assertEqual(
+            str(ve.exception),
+            "Either display name or a template is required by Report Option"
+        )
+
+    def test_init_no_display_name_but_template(self):
+        option = reports.ReportOption(
+            criteria=dict(something="somethign"), template="something.html"
+        )
+        self.assertTrue(bool(option))
+
+    def test_init_display_name_but_no_template(self):
+        option = reports.ReportOption(
+            criteria=dict(something="somethign"), display_name="Something"
+        )
+        self.assertTrue(bool(option))
+
+    def test_init_no_criteria(self):
+        with self.assertRaises(ValueError) as ve:
+            reports.ReportOption(
+                template="something.html"
+            )
+
+        self.assertEqual(
+            str(ve.exception),
+            "ReportOption requires a criteria"
+        )
+
+
+class ReportTestCase(OpalTestCase):
+    def test_generate_report_data_fails(self):
+        with self.assertRaises(NotImplementedError) as nie:
+            reports.Report().generate_report_data()
+        self.assertEqual(
+            str(nie.exception),
+            "Please implement a way of generating report data"
+        )
+
+    def test_report_options(self):
+        with self.assertRaises(NotImplementedError) as nie:
+            reports.Report().report_options()
+        self.assertEqual(
+            str(nie.exception),
+            "Please implement a way of generating report data"
+        )
+
+    def test_get_report_options(self):
+        report_options = SomeReport().get_report_options()
+        self.assertTrue(
+            isinstance(report_options[0], reports.ReportOption)
+        )
