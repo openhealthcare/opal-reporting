@@ -16,7 +16,7 @@ class ReportingPlugin(plugins.OpalPlugin):
     javascripts = {
         # Add your javascripts here!
         'opal.services': [
-            'js/reporting/services/report_loader.js',
+            'js/reporting/services/report_definition_loader.js',
             'js/reporting/services/report.js',
         ],
         'opal.controllers': [

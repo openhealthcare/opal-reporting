@@ -6,7 +6,10 @@ from reporting import reports
 class ReportOptionTestCase(OpalTestCase):
     def test_init_no_display_name_no_template(self):
         with self.assertRaises(ValueError) as ve:
-            reports.ReportOption(criteria=dict(something="somethign"))
+            reports.ReportOption(
+                "download_link",
+                criteria=dict(something="somethign")
+            )
 
         self.assertEqual(
             str(ve.exception),
@@ -15,12 +18,14 @@ class ReportOptionTestCase(OpalTestCase):
 
     def test_init_no_display_name_but_template(self):
         option = reports.ReportOption(
+            "download_link",
             criteria=dict(something="somethign"), template="something.html"
         )
         self.assertTrue(bool(option))
 
     def test_init_display_name_but_no_template(self):
         option = reports.ReportOption(
+            "download_link",
             criteria=dict(something="somethign"), display_name="Something"
         )
         self.assertTrue(bool(option))
@@ -28,6 +33,7 @@ class ReportOptionTestCase(OpalTestCase):
     def test_init_no_criteria(self):
         with self.assertRaises(ValueError) as ve:
             reports.ReportOption(
+                "download_link",
                 template="something.html"
             )
 

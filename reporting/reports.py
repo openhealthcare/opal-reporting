@@ -22,15 +22,16 @@ class ReportOption(object):
     template = "reporting/report_option.html"
     critera = {}
 
-    def __init__(self, **kwargs):
+    def __init__(self, download_link, **kwargs):
+        self.download_link = download_link
         if "display_name" not in kwargs:
             if "template" not in kwargs:
                 err = "Either display name or a template is required by Report \
 Option"
                 raise ValueError(err)
 
-            if "criteria" not in kwargs:
-                raise ValueError("ReportOption requires a criteria")
+        if "criteria" not in kwargs:
+            raise ValueError("ReportOption requires a criteria")
         for k, v in kwargs.items():
             setattr(self, k, v)
 
@@ -59,7 +60,6 @@ class Report(discoverable.DiscoverableFeature):
             display_name=self.display_name,
             slug=slug,
             description=self.description,
-            download_link=self.get_download_link(),
             create_async_link=self.get_async_create_link()
         )
 
@@ -82,10 +82,17 @@ class Report(discoverable.DiscoverableFeature):
             "Please implement a way of generating report data"
         )
 
+    def get_zip_name(self, criteria):
+        if not criteria:
+            return self.slug
+        return "{}_{}".format(self.slug, "_".join(criteria.values()))
+
     def get_report_options(self):
         # returns a list of ReportOptions, this should be overridden
         report_options = self.report_options()
-        options = [ReportOption(**i) for i in report_options]
+        options = [
+            ReportOption(self.get_download_link(), **i) for i in report_options
+        ]
         return options
 
     def write_csv(self, full_file_name, report_data):
@@ -118,4 +125,4 @@ class Report(discoverable.DiscoverableFeature):
                     report_data.file_name)
                 )
 
-        return target
+        return self.get_zip_name(criteria), target

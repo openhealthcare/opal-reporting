@@ -60,12 +60,13 @@ class ReportFileView(View):
                 status_code=status.HTTP_400_BAD_REQUEST
             )
 
-        fname = result.get()
+        zip_file_name, fname = result.get()
         with open(fname, 'rb') as fh:
             contents = fh.read()
         resp = HttpResponse(contents)
-        disp = 'attachment; filename="{0}extract{1}.zip"'.format(
-            settings.OPAL_BRAND_NAME, datetime.datetime.now().isoformat())
+        disp = 'attachment; filename="{0}.zip"'.format(
+            zip_file_name
+        )
         resp['Content-Disposition'] = disp
         return resp
 
@@ -75,12 +76,13 @@ class ReportDownLoadView(View):
     def post(self, *args, **kwargs):
         criteria = json.loads(self.request.POST['criteria'])
         report_cls = Report.get(kwargs["slug"])
-        fname = report_cls().zip_archive_report_data(
+        zip_file_name, fname = report_cls().zip_archive_report_data(
             user=self.request.user,
             criteria=criteria
         )
         resp = HttpResponse(open(fname, 'rb').read())
-        disp = 'attachment; filename="{0}extract{1}.zip"'.format(
-            settings.OPAL_BRAND_NAME, datetime.datetime.now().isoformat())
+        disp = 'attachment; filename="{0}.zip"'.format(
+            zip_file_name
+        )
         resp['Content-Disposition'] = disp
         return resp

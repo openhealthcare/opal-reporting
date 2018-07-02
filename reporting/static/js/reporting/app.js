@@ -25,8 +25,8 @@ app.config(function($routeProvider){
     .when('/:report', {
         controller: 'ReportDetailCtrl',
         resolve: {
-            report: function($route, reportLoader){
-              return reportLoader.load($route.current.params.report);
+            reportDefinition: function($route, reportDefinitionLoader){
+              return reportDefinitionLoader.load($route.current.params.report);
             }
         },
         templateUrl: function(params){

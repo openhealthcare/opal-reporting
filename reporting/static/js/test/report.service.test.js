@@ -24,18 +24,18 @@ var Report, $window, $httpBackend, $interval, $rootScope;
     var report = new Report({download_link: "some_link"});
     expect(report.download_link).toBe("some_link");
     expect(report.asyncReady).toBe(false);
-    expect(report.asyncWaiting).toBe(false);
+    expect(report.asyncCritera).toBe(false);
   });
 
   it('should reset the report', function(){
     var report = new Report({download_link: "some_link"});
     report.asyncReady = true;
-    report.asyncWaiting = true;
+    report.asyncCritera = true;
     report.reportStatusUrl = "blah";
     report.reportFileUrl = "otherBlah";
     report.reset();
     expect(report.asyncReady).toBe(false);
-    expect(report.asyncWaiting).toBe(false);
+    expect(report.asyncCritera).toBe(false);
     expect(report.reportStatusUrl).toBe(null);
     expect(report.reportFileUrl).toBe(null);
   });
@@ -54,7 +54,7 @@ var Report, $window, $httpBackend, $interval, $rootScope;
     report.startAsynchronousTask({some: "value"});
     $httpBackend.flush();
     $rootScope.$apply();
-    expect(report.asyncWaiting).toBe(true);
+    expect(report.asyncCritera).toBe(true);
     expect(report.reportStatusUrl).toBe("/reportStats");
     expect(report.reportFileUrl).toBe("/reportFile");
     expect(!!report.interval).toBe(true);
@@ -63,14 +63,14 @@ var Report, $window, $httpBackend, $interval, $rootScope;
   it('should set async=true when the result comes in', function(){
     var report = new Report({download_link: "/some_link"});
     report.reportStatusUrl = "/reportStatus";
-    report.asyncWaiting = true;
+    report.asyncCritera = true;
     $httpBackend.expectGET('/reportStatus').respond({
       ready: true
     });
     report.getAsyncStatus();
     $httpBackend.flush();
     $rootScope.$apply();
-    expect(report.asyncWaiting).toBe(false);
+    expect(report.asyncCritera).toBe(false);
     expect(report.asyncReady).toBe(true);
   });
 
