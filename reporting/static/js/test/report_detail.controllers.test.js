@@ -1,6 +1,7 @@
 describe('ReportDetailCtrl', function(){
   "use strict";
   var $scope, ctrl, $rootScope, $controller, $httpBackend;
+  var Report, report, criteria, criteriaJson, reportDefinition;
 
   beforeEach(function(){
     module('opal.controllers');
@@ -11,10 +12,21 @@ describe('ReportDetailCtrl', function(){
       $httpBackend  = $injector.get('$httpBackend');
     });
 
+    report = jasmine.createSpyObj(["startAsynchronousTask"])
+    Report = jasmine.createSpy("Report");
+    Report.and.returnValue(report);
+    reportDefinition = "someReport"
+
     ctrl = $controller('ReportDetailCtrl', {
         $scope: $scope,
-        report: "someReport"
+        reportDefinition: reportDefinition,
+        Report: Report
     });
+
+    criteria = {some: "criteria"}
+    $scope.startDownload(criteria);
+    criteriaJson = JSON.stringify(criteria);
+
   });
 
   afterEach(function(){
@@ -22,7 +34,12 @@ describe('ReportDetailCtrl', function(){
     $httpBackend.verifyNoOutstandingRequest();
   });
 
+  it('should create a report on start download', function(){
+    expect(Report).toHaveBeenCalledWith(reportDefinition, criteria);
+    expect(report.startAsynchronousTask).toHaveBeenCalled();
+  });
+
   it('show hoist the report onto scope', function(){
-    expect($scope.report).toBe("someReport");
+    expect($scope.reports[criteriaJson]).toBe(report);
   });
 });

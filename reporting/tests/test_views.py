@@ -94,11 +94,12 @@ class TestReportDownLoadView(ViewsTestCase):
         url = reverse("report_download", kwargs={
             "slug": self.report.get_slug()
         })
-        response = self.client.post(url, dict(criteria=json.dumps("{}")))
+        response = self.client.post(url, dict(criteria=json.dumps({})))
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(response["content-disposition"].startswith(
-            'attachment; filename="reportingextract'
-        ))
+        self.assertEqual(
+            response["content-disposition"],
+            'attachment; filename="some-report.zip"'
+        )
 
     @override_settings(EXTRACT_ASYNC=False)
     def test_get_sync_params(self):
@@ -120,9 +121,10 @@ class TestReportDownLoadView(ViewsTestCase):
         self.assertEqual(call_args[1]["criteria"], criteria)
 
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(response["content-disposition"].startswith(
-            'attachment; filename="reportingextract'
-        ))
+        self.assertEqual(
+            response["content-disposition"],
+            'attachment; filename="some-report_other.zip"'
+        )
 
 
 @patch('reporting.views.AsyncResult')
@@ -147,7 +149,7 @@ class TestReportFileView(ViewsTestCase):
     def test_success(self, AsyncResult):
         AsyncResult().ready.return_value = True
         AsyncResult().successful.return_value = True
-        AsyncResult().get.return_value = "some_filname.txt"
+        AsyncResult().get.return_value = "zip_file_name", "file_context.txt"
         url = reverse("report_file", kwargs={
             "task_id": "100"
         })
@@ -156,5 +158,5 @@ class TestReportFileView(ViewsTestCase):
             response = self.client.get(url)
         self.assertEqual(response.content, "")
         self.assertTrue(response["content-disposition"].startswith(
-            'attachment; filename="reportingextract'
+            'attachment; filename="zip_file_name'
         ))

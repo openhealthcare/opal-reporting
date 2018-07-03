@@ -1,6 +1,6 @@
 describe('Report', function(){
-"use strict";
-var Report, $window, $httpBackend, $interval, $rootScope;
+  "use strict";
+  var Report, $window, $httpBackend, $interval, $rootScope;
 
 
   beforeEach(function(){
@@ -20,48 +20,56 @@ var Report, $window, $httpBackend, $interval, $rootScope;
     $httpBackend.verifyNoOutstandingRequest();
   });
 
+  var getReport = function(){
+    return new Report(
+      {create_async_link: "/some_link"},
+      {quarter: "2017_1"}
+    );
+  }
+
   it('should initialise the report', function(){
-    var report = new Report({download_link: "some_link"});
-    expect(report.download_link).toBe("some_link");
+    var report = getReport();
+    expect(report.create_async_link).toBe("/some_link");
     expect(report.asyncReady).toBe(false);
-    expect(report.asyncCritera).toBe(false);
+    expect(report.reportStatusUrl).toBe(null);
+    expect(report.reportFileUrl).toBe(null);
+    expect(report.criteria).toEqual({quarter: "2017_1"});
   });
 
   it('should reset the report', function(){
-    var report = new Report({download_link: "some_link"});
+    var report = getReport();
     report.asyncReady = true;
     report.asyncCritera = true;
     report.reportStatusUrl = "blah";
     report.reportFileUrl = "otherBlah";
     report.reset();
     expect(report.asyncReady).toBe(false);
-    expect(report.asyncCritera).toBe(false);
     expect(report.reportStatusUrl).toBe(null);
     expect(report.reportFileUrl).toBe(null);
   });
 
   it('show open a window on download', function(){
-      var report = new Report({reportFileUrl: "some_link"});
+      var report = getReport();
+      report.reportFileUrl = "/some_link";
       report.downloadAsynchronously();
-      expect($window.open).toHaveBeenCalledWith("some_link", '_blank');
+      expect($window.open).toHaveBeenCalledWith("/some_link", '_blank');
   });
 
   it('should trigger $interval on dowload asynchronously', function(){
-    var report = new Report({create_async_link: "/some_link"});
-    $httpBackend.expectPOST('/some_link', {"criteria":"{\"some\":\"value\"}"}).respond({
+    var report = getReport();
+    $httpBackend.expectPOST('/some_link', {"criteria":"{\"quarter\":\"2017_1\"}"}).respond({
       report_status_url: "/reportStats", report_file_url: "/reportFile"
     });
-    report.startAsynchronousTask({some: "value"});
+    report.startAsynchronousTask();
     $httpBackend.flush();
     $rootScope.$apply();
-    expect(report.asyncCritera).toBe(true);
     expect(report.reportStatusUrl).toBe("/reportStats");
     expect(report.reportFileUrl).toBe("/reportFile");
     expect(!!report.interval).toBe(true);
   });
 
   it('should set async=true when the result comes in', function(){
-    var report = new Report({download_link: "/some_link"});
+    var report = new Report({create_async_link: "/some_link"});
     report.reportStatusUrl = "/reportStatus";
     report.asyncCritera = true;
     $httpBackend.expectGET('/reportStatus').respond({
@@ -70,7 +78,6 @@ var Report, $window, $httpBackend, $interval, $rootScope;
     report.getAsyncStatus();
     $httpBackend.flush();
     $rootScope.$apply();
-    expect(report.asyncCritera).toBe(false);
     expect(report.asyncReady).toBe(true);
   });
 
