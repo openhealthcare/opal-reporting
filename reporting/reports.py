@@ -47,7 +47,7 @@ class Report(discoverable.DiscoverableFeature):
     description = None
     file_name = ""
 
-    # the text to be displayed if not reports are available
+    # the text to be displayed if no reports are available
     # the whole template can be override by no_report_templtate
     no_report_text = "Sorry no reports are currently available"
 
