@@ -1,4 +1,5 @@
 from opal.core.test import OpalTestCase
+from opal.utils import AbstractBase
 from reporting.tests.reports import SomeReport
 from reporting import reports
 
@@ -44,6 +45,23 @@ class ReportOptionTestCase(OpalTestCase):
 
 
 class ReportTestCase(OpalTestCase):
+    def setUp(self):
+        class TestReport(AbstractBase, reports.Report):
+            display_name = "display name"
+            description = "description"
+
+        self.report = TestReport()
+
+    def test_get_display_name(self):
+        self.assertEqual(
+            self.report.get_display_name(), "display name"
+        )
+
+    def test_get_description(self):
+        self.assertEqual(
+            self.report.get_description(), "description"
+        )
+
     def test_generate_report_data_fails(self):
         with self.assertRaises(NotImplementedError) as nie:
             reports.Report().generate_report_data()

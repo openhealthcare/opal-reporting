@@ -4,7 +4,7 @@
     <div class="panel-heading">
       <h2>
         <i class="fa fa-tasks"></i>
-        Reports - [[ report.display_name ]]
+        {{ object.get_display_name }}
       </h2>
     </div>
     <div class="panel-body">
@@ -12,12 +12,12 @@
         <div class="col-md-12">
           <p class="lead">
             {% block report_description %}
-            [[ report.description ]]
+            {{ object.get_description }}
             {% endblock report_description %}
           </p>
         </div>
       </div>
-      <div class="row ">
+      <div class="row">
         {% block report_options %}
           {% if object.get_report_options %}
             {% for report_option in object.get_report_options %}

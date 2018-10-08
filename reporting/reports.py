@@ -57,9 +57,9 @@ class Report(discoverable.DiscoverableFeature):
     def to_dict(self):
         slug = self.__class__.get_slug()
         return dict(
-            display_name=self.display_name,
+            display_name=self.get_display_name(),
             slug=slug,
-            description=self.description,
+            description=self.get_description(),
             create_async_link=self.get_async_create_link()
         )
 
@@ -70,6 +70,12 @@ class Report(discoverable.DiscoverableFeature):
     def get_async_create_link(self):
         url = reverse("reporting-task-list")
         return "{0}?slug={1}".format(url, self.__class__.get_slug())
+
+    def get_display_name(self):
+        return self.display_name
+
+    def get_description(self):
+        return self.description
 
     def generate_report_data(self, user=None, criteria=None):
         # returns a list of ReportFiles, this should be overrode

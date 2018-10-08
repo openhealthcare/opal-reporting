@@ -11,6 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from opal.core import celery
 from opal.core.views import json_response
+
 from opal.core.search.views import ajax_login_required_view
 from rest_framework import status
 
