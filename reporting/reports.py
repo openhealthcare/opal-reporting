@@ -4,6 +4,7 @@ import os
 import tempfile
 import zipfile
 import csv
+import json
 from django.core.urlresolvers import reverse
 
 from opal.core import discoverable
@@ -12,6 +13,27 @@ import collections
 
 
 ReportFile = collections.namedtuple('ReportFile', 'file_name file_data')
+
+
+class ReportOption(object):
+    """
+    The options as they appear in the template
+    """
+    template = "reporting/report_option.html"
+    critera = {}
+
+    def __init__(self, download_link, **kwargs):
+        self.download_link = download_link
+        if "display_name" not in kwargs:
+            if "template" not in kwargs:
+                err = "Either display name or a template is required by Report \
+Option"
+                raise ValueError(err)
+
+        if "criteria" not in kwargs:
+            raise ValueError("ReportOption requires a criteria")
+        for k, v in kwargs.items():
+            setattr(self, k, v)
 
 
 class Report(discoverable.DiscoverableFeature):
@@ -25,13 +47,19 @@ class Report(discoverable.DiscoverableFeature):
     description = None
     file_name = ""
 
+    # the text to be displayed if no reports are available
+    # the whole template can be override by no_report_templtate
+    no_report_text = "Sorry no reports are currently available"
+
+    # the template to be displayed if there are no reports
+    no_report_template = None
+
     def to_dict(self):
         slug = self.__class__.get_slug()
         return dict(
-            display_name=self.display_name,
+            display_name=self.get_display_name(),
             slug=slug,
-            description=self.description,
-            download_link=self.get_download_link(),
+            description=self.get_description(),
             create_async_link=self.get_async_create_link()
         )
 
@@ -43,11 +71,35 @@ class Report(discoverable.DiscoverableFeature):
         url = reverse("reporting-task-list")
         return "{0}?slug={1}".format(url, self.__class__.get_slug())
 
+    def get_display_name(self):
+        return self.display_name
+
+    def get_description(self):
+        return self.description
+
     def generate_report_data(self, user=None, criteria=None):
         # returns a list of ReportFiles, this should be overrode
         raise NotImplementedError(
             "Please implement a way of generating report data"
         )
+
+    def report_options(self):
+        raise NotImplementedError(
+            "Please implement a way of generating report data"
+        )
+
+    def get_zip_name(self, criteria):
+        if not criteria:
+            return self.slug
+        return "{}_{}".format(self.slug, "_".join(criteria.values()))
+
+    def get_report_options(self):
+        # returns a list of ReportOptions, this should be overridden
+        report_options = self.report_options()
+        options = [
+            ReportOption(self.get_download_link(), **i) for i in report_options
+        ]
+        return options
 
     def write_csv(self, full_file_name, report_data):
         with open(full_file_name, "w") as csv_file:
@@ -79,4 +131,4 @@ class Report(discoverable.DiscoverableFeature):
                     report_data.file_name)
                 )
 
-        return target
+        return self.get_zip_name(criteria), target

@@ -4,7 +4,7 @@
     <div class="panel-heading">
       <h2>
         <i class="fa fa-tasks"></i>
-        Reports - [[ report.display_name ]]
+        {{ object.get_display_name }}
       </h2>
     </div>
     <div class="panel-body">
@@ -12,53 +12,37 @@
         <div class="col-md-12">
           <p class="lead">
             {% block report_description %}
-            [[ report.description ]]
+            {{ object.get_description }}
             {% endblock report_description %}
           </p>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-12 text-center">
-          {% block report_button %}
-            {% if EXTRACT_ASYNC %}
-              {# click to start the async process #}
-              <span ng-show="!report.asyncWaiting && !report.asyncReady">
-                <button ng-click="report.startAsynchronousTask()" class="btn btn-lg btn-primary">
-                  <i class="fa fa-cogs"></i>
-                  Download this data
-                </button>
-              </span>
-
-              {# while we're waiting #}
-              <span ng-show="report.asyncWaiting && !report.asyncReady">
-                <button disabled class="btn btn-lg">
-                  <i class="fa fa-cog fa-spin" ></i>
-                  Building your report... this could take some time...
-                </button>
-              </span>
-
-              {# while we are go people #}
-              <span ng-show="!report.asyncWaiting && report.asyncReady">
-                <button ng-click="report.downloadAsynchronously()" class="btn btn-lg btn-primary">
-                  <i class="glyphicon glyphicon-download"></i>
-                  Ready - Download your report
-                </button>
-              </span>
+        {% block report_options %}
+          {% if object.get_report_options %}
+            {% for report_option in object.get_report_options %}
+              <div class="col-sm-6 col-md-3 content-offset-below-25">
+                <div class="report-option">
+                  {% include report_option.template %}
+                  <div class="row">
+                    <div class="text-center col-md-12">
+                      {% include "reporting/report_option_button.html" %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            {% if object.no_report_templtate %}
+              {% include object.no_report_templtate %}
             {% else %}
-            <form action="[[ report.download_link ]]" method="post" target="_blank">
-              {% csrf_token %}
-              <input name="criteria" type="hidden" value="[[ JSON.stringify(report.criteria) ]]">
-              <button type="submit" class="btn btn-lg btn-primary">
-                <i class="glyphicon glyphicon-download"></i>
-                Download this report
-              </button>
-            </form>
+              <h3 class="text-center">{{ object.no_report_text }}</h3>
             {% endif %}
-          {% endblock %}
-        </div>
+          {% endif %}
+        {% endblock %}
       </div>
-      {% block report_choices %}
-      {% endblock report_choices %}
+      {% block report_footer %}
+      {% endblock %}
     </div>
   </div>
 </div>

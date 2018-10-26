@@ -1,9 +1,16 @@
-angular.module('opal.reporting').controller(
-    'ReportDetailCtrl', function($scope, report){
-      $scope.report = report;
-      // To keep params out of URLs we're using a form-like
-      // POST request and serialising things with the value of
-      // a hidden field being a JSON version of the criteria variable
-      $scope.JSON = window.JSON;
+angular.module('opal.controllers').controller(
+    'ReportDetailCtrl', function($scope, Report, reportDefinition){
+      $scope.reports = {}
+      $scope.startDownload = function(criteria){
+        var report = new Report(
+          reportDefinition, criteria
+        );
+        report.startAsynchronousTask();
+        $scope.reports[JSON.stringify(criteria)] = report
+      }
+
+      $scope.getReport = function(criteria){
+        return $scope.reports[JSON.stringify(criteria)];
+      }
     }
 );

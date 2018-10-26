@@ -1,5 +1,5 @@
-angular.module('opal.reporting')
-  .factory('reportLoader', function($q, $route, $http, $window, Report){
+angular.module('opal.services')
+  .factory('reportDefinitionLoader', function($q, $route, $http, $window){
     "use strict";
     return {
       load: function(reportSlug){
@@ -8,7 +8,7 @@ angular.module('opal.reporting')
 
         $http({ cache: true, url: url, method: 'GET'}).then(
           function(resource) {
-  		        deferred.resolve(new Report(resource.data));
+  		        deferred.resolve(resource.data);
           },
           function() {
   	        // handle error better

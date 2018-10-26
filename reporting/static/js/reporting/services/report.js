@@ -1,9 +1,9 @@
-angular.module('opal.reporting').factory('Report', function($window, $interval, $http){
+angular.module('opal.services').factory('Report', function($window, $interval, $http){
   "use strict";
-  var Report = function(reportDefinition){
+  var Report = function(reportDefinition, criteria){
     this.reset();
     _.extend(this, reportDefinition);
-    this.criteria = {};
+    this.criteria = criteria;
   };
 
   Report.prototype = {
@@ -20,7 +20,7 @@ angular.module('opal.reporting').factory('Report', function($window, $interval, 
       var self = this;
       this.asyncWaiting = true;
       $http.post(
-        this.create_async_link, {criteria: JSON.stringify(this.criteria)}
+        this.create_async_link, {criteria: JSON.stringify(self.criteria)}
       ).then(function(result){
         self.reportStatusUrl = result.data.report_status_url;
         self.reportFileUrl = result.data.report_file_url;

@@ -12,14 +12,19 @@ class ReportingPlugin(plugins.OpalPlugin):
     Main entrypoint to expose this plugin to our OPAL application.
     """
     urls = urlpatterns
+    stylesheets = ["css/reporting.css"]
     javascripts = {
         # Add your javascripts here!
-        'opal.reporting': [
-            'js/reporting/app.js',
+        'opal.services': [
+            'js/reporting/services/report_definition_loader.js',
+            'js/reporting/services/report.js',
+        ],
+        'opal.controllers': [
             'js/reporting/controllers/report_detail.js',
             'js/reporting/controllers/report_list.js',
-            'js/reporting/services/report_loader.js',
-            'js/reporting/services/report.js',
+        ],
+        'opal.reporting': [
+            'js/reporting/app.js',
         ]
     }
 

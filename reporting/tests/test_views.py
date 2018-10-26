@@ -26,22 +26,52 @@ class TestListView(ViewsTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("Some Report", response.content)
 
+    def test_login_required(self):
+        self.client.logout()
+        response = self.client.get(reverse("report_list"), follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.template_name,
+            'registration/login.html'
+        )
+
 
 class TestDetailView(ViewsTestCase):
+    def get_url(self):
+        return reverse(
+            "report_detail",
+            kwargs={
+                "slug": self.report.get_slug(),
+            }
+        )
+
     def test_get(self):
-        response = self.client.get(reverse("report_detail", kwargs={
-            "slug": self.report.get_slug()
-        }))
+        url = self.get_url()
+        response = self.client.get(url, follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             response.template_name,
             ['/some', 'reporting/report_detail.html']
         )
 
+    def test_get_login_required(self):
+        url = self.get_url()
+        self.client.logout()
+        response = self.client.get(url, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.template_name,
+            'registration/login.html'
+        )
+
     def test_get_templates_when_not_set(self):
         class SomeOtherReport(Report):
             slug = "some-other-report"
             display_name = "Some Other Report"
+
+            def report_options(self):
+                return []
+
         response = self.client.get(reverse("report_detail", kwargs={
             "slug": SomeOtherReport.get_slug()
         }))
@@ -64,11 +94,12 @@ class TestReportDownLoadView(ViewsTestCase):
         url = reverse("report_download", kwargs={
             "slug": self.report.get_slug()
         })
-        response = self.client.post(url, dict(criteria=json.dumps("{}")))
+        response = self.client.post(url, dict(criteria=json.dumps({})))
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(response["content-disposition"].startswith(
-            'attachment; filename="reportingextract'
-        ))
+        self.assertEqual(
+            response["content-disposition"],
+            'attachment; filename="some-report.zip"'
+        )
 
     @override_settings(EXTRACT_ASYNC=False)
     def test_get_sync_params(self):
@@ -90,9 +121,10 @@ class TestReportDownLoadView(ViewsTestCase):
         self.assertEqual(call_args[1]["criteria"], criteria)
 
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(response["content-disposition"].startswith(
-            'attachment; filename="reportingextract'
-        ))
+        self.assertEqual(
+            response["content-disposition"],
+            'attachment; filename="some-report_other.zip"'
+        )
 
 
 @patch('reporting.views.AsyncResult')
@@ -117,7 +149,7 @@ class TestReportFileView(ViewsTestCase):
     def test_success(self, AsyncResult):
         AsyncResult().ready.return_value = True
         AsyncResult().successful.return_value = True
-        AsyncResult().get.return_value = "some_filname.txt"
+        AsyncResult().get.return_value = "zip_file_name", "file_context.txt"
         url = reverse("report_file", kwargs={
             "task_id": "100"
         })
@@ -126,5 +158,5 @@ class TestReportFileView(ViewsTestCase):
             response = self.client.get(url)
         self.assertEqual(response.content, "")
         self.assertTrue(response["content-disposition"].startswith(
-            'attachment; filename="reportingextract'
+            'attachment; filename="zip_file_name'
         ))
