@@ -19,7 +19,7 @@ settings.configure(
     STATIC_URL='/assets/',
     COMPRESS_ROOT='/tmp/',
     OPAL_BRAND_NAME="reporting",
-    TEMPLATES=[
+    TEMPLATES = [
         {
             'BACKEND': 'django.template.backends.django.DjangoTemplates',
             'DIRS': [],
@@ -41,7 +41,7 @@ settings.configure(
             },
         },
     ],
-    MIDDLEWARE_CLASSES=(
+    MIDDLEWARE=(
         'django.middleware.common.CommonMiddleware',
         'django.contrib.sessions.middleware.SessionMiddleware',
         'opal.middleware.AngularCSRFRename',
@@ -49,8 +49,7 @@ settings.configure(
         'django.contrib.auth.middleware.AuthenticationMiddleware',
         'django.contrib.messages.middleware.MessageMiddleware',
         'opal.middleware.DjangoReversionWorkaround',
-        'reversion.middleware.RevisionMiddleware',
-        'axes.middleware.FailedLoginMiddleware',
+        'reversion.middleware.RevisionMiddleware'
     ),
     INSTALLED_APPS=(
         'django.contrib.auth',

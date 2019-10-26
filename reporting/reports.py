@@ -5,7 +5,7 @@ import tempfile
 import zipfile
 import csv
 import json
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from opal.core import discoverable
 

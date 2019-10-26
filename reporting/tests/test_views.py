@@ -1,7 +1,7 @@
-from mock import patch, mock_open
+from unittest.mock import patch, mock_open
 import json
 
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.test import override_settings
 
 from opal.core.test import OpalTestCase
@@ -24,7 +24,7 @@ class TestListView(ViewsTestCase):
     def test_get(self):
         response = self.client.get(reverse("report_list"))
         self.assertEqual(response.status_code, 200)
-        self.assertIn("Some Report", response.content)
+        self.assertIn("Some Report", str(response.content))
 
     def test_login_required(self):
         self.client.logout()
@@ -32,7 +32,7 @@ class TestListView(ViewsTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             response.template_name,
-            'registration/login.html'
+            ['registration/login.html']
         )
 
 
@@ -61,7 +61,7 @@ class TestDetailView(ViewsTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             response.template_name,
-            'registration/login.html'
+            ['registration/login.html']
         )
 
     def test_get_templates_when_not_set(self):
@@ -144,7 +144,7 @@ class TestReportFileView(ViewsTestCase):
             "task_id": "100"
         })
         response = self.client.get(url)
-        self.assertEqual(response.content, "")
+        self.assertEqual(response.content, b"")
 
     def test_success(self, AsyncResult):
         AsyncResult().ready.return_value = True
@@ -156,7 +156,7 @@ class TestReportFileView(ViewsTestCase):
         m = mock_open()
         with patch("reporting.views.open", m, create=True):
             response = self.client.get(url)
-        self.assertEqual(response.content, "")
+        self.assertEqual(response.content, b"")
         self.assertTrue(response["content-disposition"].startswith(
             'attachment; filename="zip_file_name'
         ))

@@ -1,6 +1,6 @@
 import json
-from mock import patch
-from django.core.urlresolvers import reverse
+from unittest.mock import patch
+from django.urls import reverse
 
 from opal.core.test import OpalTestCase
 from reporting.tests.reports import SomeReport

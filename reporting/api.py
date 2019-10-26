@@ -3,7 +3,7 @@ from opal.core.api import LoginRequiredViewset
 from celery.result import AsyncResult
 from opal.core import celery
 from opal.core.views import json_response, _get_request_data
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 import json
 
 
